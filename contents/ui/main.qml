@@ -12,6 +12,7 @@ import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.kirigami as Kirigami
 import org.kde.taskmanager as TaskManager
+import org.kde.plasma.plasma5support as Plasma5Support
 
 PlasmoidItem {
     id: root
@@ -22,6 +23,16 @@ PlasmoidItem {
 
     TaskManager.VirtualDesktopInfo {
         id: vdInfo
+    }
+
+    // D-Bus 명령 실행을 위한 DataSource
+    Plasma5Support.DataSource {
+        id: executable
+        engine: "executable"
+        connectedSources: []
+        onNewData: (sourceName, data) => {
+            disconnectSource(sourceName);
+        }
     }
 
     Component {
@@ -51,6 +62,16 @@ PlasmoidItem {
                     implicitWidth: taskRow.implicitWidth + 16
                     height: parent.height - 2
                     anchors.verticalCenter: parent.verticalCenter
+
+                    // 가상 데스크톱 영역 클릭 시 해당 데스크톱으로 전환
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            // qdbus6를 사용하여 KWin에 직접 데스크톱 전환을 요청합니다.
+                            // 이는 API 호환성 문제를 피할 수 있는 가장 확실한 방법입니다.
+                            executable.connectSource("qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.current " + desktopGroup.targetDesktop);
+                        }
+                    }
 
                     Row {
                         id: taskRow
