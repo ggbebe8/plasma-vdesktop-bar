@@ -28,11 +28,11 @@ A clean, intuitive, and highly functional Virtual Desktop & Task Manager widget 
 
 1. 이 저장소의 [Releases] 페이지에서 최신 `com.gnoeyps.vdbar.plasmoid` 파일을 다운로드합니다.
 2. 터미널을 열고 아래 명령어를 입력합니다:
-   ```bash
+```bash
    kpackagetool6 -t Plasma/Applet -i com.gnoeyps.vdbar.plasmoid
     # Plasma 쉘을 재시작하여 위젯을 시스템에 적용합니다:
     plasmashell --replace &
-  ```
+```
  3. 바탕화면 패널에서 우클릭 -> [위젯 추가] -> Virtual Desktop Bar를 검색하여 패널에 추가합니다.
 
 ### 방법 2: Git 소스 코드로 직접 설치
