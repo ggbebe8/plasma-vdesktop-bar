@@ -6,7 +6,7 @@
  //zip -r com.gnoeyps.vdbar.plasmoid com.gnoeyps.vdbar/
  //압축 설치
  //kpackagetool6 -t Plasma/Applet -i com.gnoeyps.vdbar.plasmoid
-
+ 
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
@@ -41,11 +41,13 @@ PlasmoidItem {
                     
                     readonly property string targetDesktop: modelData
                     
+                    // 현재 가상 데스크톱 강조 표시
                     color: vdInfo.currentDesktop === targetDesktop ? Qt.rgba(0.8, 0.8, 0.8, 0.3) : "transparent"
                     radius: 6
                     border.color: Qt.rgba(0.5, 0.5, 0.5, 0.3)
                     border.width: 1
 
+                    // 내부 아이콘 개수에 따라 너비 조절
                     implicitWidth: taskRow.implicitWidth + 16
                     height: parent.height - 2
                     anchors.verticalCenter: parent.verticalCenter
@@ -69,10 +71,28 @@ PlasmoidItem {
                                 filterByVirtualDesktop: true
                                 virtualDesktop: desktopGroup.targetDesktop
                                 filterByScreen: true
+                                // Activity 필터 추가로 초기 로딩 안정성 확보
+                                filterByActivity: true
                             }
 
                             delegate: Rectangle {
-                                width: 28; height: 28
+                                // [수정된 핵심 로직]
+                                // 1. model.IsOnAllDesktops가 true인 경우(초기 로딩 시 흔히 발생)
+                                //    해당 창이 실제로 현재 데스크톱에 활성화된 경우에만 보여줍니다.
+                                // 2. 정상적인 상태라면 해당 데스크톱의 아이콘만 보여줍니다.
+                                // 3. Plasma 6의 VirtualDesktops 속성을 직접 확인하여 필터링 안정성을 높입니다.
+                                visible: {
+                                    if (model.IsOnAllDesktops === true) {
+                                        return vdInfo.currentDesktop === desktopGroup.targetDesktop;
+                                    }
+                                    if (model.VirtualDesktops !== undefined && model.VirtualDesktops.length > 0) {
+                                        return model.VirtualDesktops.indexOf(desktopGroup.targetDesktop) !== -1;
+                                    }
+                                    return false; 
+                                }
+
+                                width: visible ? 28 : 0
+                                height: visible ? 28 : 0
                                 radius: 4
                                 color: taskMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.1) : "transparent"
                                 anchors.verticalCenter: parent.verticalCenter
