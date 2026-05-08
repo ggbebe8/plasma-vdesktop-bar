@@ -2,6 +2,10 @@
 //rm -rf ~/.local/share/plasma/plasmoids/com.gnoeyps.vdbar
  //설치
  //kpackagetool6 -t Plasma/Applet -i .
+ //압축
+ //zip -r com.gnoeyps.vdbar.plasmoid com.gnoeyps.vdbar/
+ //압축 설치
+ //kpackagetool6 -t Plasma/Applet -i com.gnoeyps.vdbar.plasmoid
 
 import QtQuick
 import QtQuick.Layouts
