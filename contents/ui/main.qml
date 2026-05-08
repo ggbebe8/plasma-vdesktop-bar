@@ -73,6 +73,8 @@ PlasmoidItem {
                                 filterByScreen: true
                                 // Activity 필터 추가로 초기 로딩 안정성 확보
                                 filterByActivity: true
+                                // 동일 앱 그룹화 해제: 모든 창을 개별 아이콘으로 표시
+                                groupMode: TaskManager.TasksModel.GroupDisabled
                             }
 
                             delegate: Rectangle {
