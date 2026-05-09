@@ -134,7 +134,14 @@ PlasmoidItem {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     onClicked: {
-                                        tasksModel.requestActivate(tasksModel.index(index, 0));
+                                        const taskIndex = tasksModel.index(index, 0);
+                                        if (model.IsActive === true) {
+                                            // 이미 활성화된 창이면 최소화
+                                            tasksModel.requestToggleMinimized(taskIndex);
+                                        } else {
+                                            // 활성화되지 않은 창이면 활성화
+                                            tasksModel.requestActivate(taskIndex);
+                                        }
                                     }
                                 }
                             }
